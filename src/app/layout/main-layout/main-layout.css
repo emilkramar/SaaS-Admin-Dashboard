@@ -1,0 +1,4 @@
+/* Main layout uses theme variables */
+main {
+  background-color: var(--color-background);
+}

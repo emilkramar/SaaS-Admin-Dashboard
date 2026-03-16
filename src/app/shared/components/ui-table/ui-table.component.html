@@ -1,0 +1,53 @@
+<div class="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
+  <div class="table-actions w-full flex flex-row justify-end border-b border-border px-4 py-3">
+    <input
+      class="search w-full max-w-xs rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+      type="text"
+      placeholder="Search..."
+      [ngModel]="searchValue()"
+      (ngModelChange)="searchValue.set($event)"
+    />
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full min-w-full border-collapse text-left text-sm">
+      <thead>
+        <tr class="border-b border-border bg-surface-subtle">
+          @for (header of headers(); track header.key) {
+            <th
+              class="px-4 py-3 font-medium text-muted-foreground first:pl-5 last:pr-5"
+            >
+              {{ header.label }}
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border bg-surface">
+        @for (row of filteredRows(); track $index) {
+          <tr
+            class="transition-colors hover:bg-surface-hover"
+          >
+            @for (header of headers(); track header.key) {
+              <td class="px-4 py-3 first:pl-5 last:pr-5">
+                @switch (header.type) {
+                  @case ('text') {
+                    <span class="text-foreground">{{ row[header.key] }}</span>
+                  }
+                  @case ('badge') {
+                    <app-ui-badge
+                      [value]="row[header.key].label"
+                      [color]="row[header.key].color"
+                    />
+                  }
+                  @default {
+                    <span class="text-foreground">{{ row[header.key] }}</span>
+                  }
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "action": "User created",
+    "user": "John Doe",
+    "time": "10 minutes ago"
+  },
+  {
+    "id": 2,
+    "action": "Password changed",
+    "user": "Anna Smith",
+    "time": "1 hour ago"
+  },
+  {
+    "id": 3,
+    "action": "Profile updated",
+    "user": "Michael Chen",
+    "time": "2 hours ago"
+  },
+  {
+    "id": 4,
+    "action": "Login successful",
+    "user": "Sarah Johnson",
+    "time": "3 hours ago"
+  },
+  {
+    "id": 5,
+    "action": "Settings changed",
+    "user": "David Wilson",
+    "time": "4 hours ago"
+  },
+  {
+    "id": 6,
+    "action": "Document uploaded",
+    "user": "Emily Brown",
+    "time": "5 hours ago"
+  },
+  {
+    "id": 7,
+    "action": "Role assigned",
+    "user": "James Martinez",
+    "time": "6 hours ago"
+  },
+  {
+    "id": 8,
+    "action": "Email verified",
+    "user": "Olivia Davis",
+    "time": "7 hours ago"
+  },
+  {
+    "id": 9,
+    "action": "Two-factor enabled",
+    "user": "Robert Garcia",
+    "time": "8 hours ago"
+  },
+  {
+    "id": 10,
+    "action": "Export completed",
+    "user": "Sophia Anderson",
+    "time": "9 hours ago"
+  },
+  {
+    "id": 11,
+    "action": "Report generated",
+    "user": "William Taylor",
+    "time": "10 hours ago"
+  },
+  {
+    "id": 12,
+    "action": "Invite sent",
+    "user": "Isabella Thomas",
+    "time": "11 hours ago"
+  },
+  {
+    "id": 13,
+    "action": "API key created",
+    "user": "Benjamin Moore",
+    "time": "12 hours ago"
+  },
+  {
+    "id": 14,
+    "action": "Subscription updated",
+    "user": "Mia Jackson",
+    "time": "1 day ago"
+  },
+  {
+    "id": 15,
+    "action": "Login failed",
+    "user": "Lucas White",
+    "time": "1 day ago"
+  },
+  {
+    "id": 16,
+    "action": "Account locked",
+    "user": "Charlotte Harris",
+    "time": "1 day ago"
+  },
+  {
+    "id": 17,
+    "action": "Password reset",
+    "user": "Henry Clark",
+    "time": "2 days ago"
+  },
+  {
+    "id": 18,
+    "action": "Bulk import completed",
+    "user": "Amelia Lewis",
+    "time": "2 days ago"
+  },
+  {
+    "id": 19,
+    "action": "Webhook configured",
+    "user": "Alexander Lee",
+    "time": "3 days ago"
+  },
+  {
+    "id": 20,
+    "action": "Integration connected",
+    "user": "Ella Walker",
+    "time": "3 days ago"
+  }
+]

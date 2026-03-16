@@ -1,0 +1,12 @@
+<span
+  class="inline-flex items-center justify-center rounded-full border px-2.5 py-0.5 text-xs font-medium"
+  [ngClass]="{
+    'border-border bg-surface-subtle text-foreground': color() === 'neutral',
+    'border-success/20 bg-success-muted text-success': color() === 'success',
+    'border-warning/20 bg-warning-muted text-warning': color() === 'warning',
+    'border-error/20 bg-error-muted text-error': color() === 'error',
+    'border-primary/20 bg-primary-muted text-primary': color() === 'info' || color() === 'primary'
+  }"
+>
+  {{ value() }}
+</span>

@@ -1,1 +1,30 @@
-<p>sidebar works!</p>
+<aside
+  class="flex h-full w-full flex-col border-r border-border bg-sidebar shrink-0"
+>
+  <!-- Logo / brand -->
+  <div
+    class="flex h-14 shrink-0 items-center border-b border-border px-5"
+  >
+    <span class="text-lg font-semibold tracking-tight text-foreground">
+      SaaS Admin
+    </span>
+  </div>
+
+  <!-- Nav -->
+  <nav class="flex-1 overflow-y-auto px-3 py-4">
+    <ul class="flex flex-col gap-0.5" role="list">
+      @for (item of navItems(); track item.id) {
+        <li>
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="bg-primary-muted text-primary font-medium"
+            [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+            class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted transition-colors hover:bg-surface-subtle hover:text-foreground"
+          >
+            {{ item.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+</aside>
