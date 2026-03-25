@@ -20,6 +20,7 @@ export interface TableHeader {
 export class UiTableComponent {
   headers = input<TableHeader[]>([]);
   rows = input<any[]>([]);
+  loading = input<boolean>(true);
 
   searchValue = signal<string>('');
   filteredRows = signal<any[]>([]);

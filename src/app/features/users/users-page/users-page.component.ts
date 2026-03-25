@@ -25,6 +25,7 @@ export class UsersPageComponent {
   ]
 
   users = signal<IUser[]>([])
+  loading = signal<boolean>(true)
 
   constructor() {
     this._users.getUsers().pipe(
@@ -41,7 +42,8 @@ export class UsersPageComponent {
         }))
       )
     ).subscribe( (res: any) => {
-      this.users.set(res)
+      this.users.set(res);
+      this.loading.set(false);
     })
   }
 }

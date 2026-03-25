@@ -22,32 +22,48 @@
           }
         </tr>
       </thead>
-      <tbody class="divide-y divide-border bg-surface">
-        @for (row of filteredRows(); track $index) {
-          <tr
-            class="transition-colors hover:bg-surface-hover"
-          >
-            @for (header of headers(); track header.key) {
-              <td class="px-4 py-3 first:pl-5 last:pr-5">
-                @switch (header.type) {
-                  @case ('text') {
-                    <span class="text-foreground">{{ row[header.key] }}</span>
+      @if (!loading()) {
+        <tbody class="divide-y divide-border bg-surface">
+          @for (row of filteredRows(); track $index) {
+            <tr
+              class="transition-colors hover:bg-surface-hover"
+            >
+              @for (header of headers(); track header.key) {
+                <td class="px-4 py-3 first:pl-5 last:pr-5">
+                  @switch (header.type) {
+                    @case ('text') {
+                      <span class="text-foreground">{{ row[header.key] }}</span>
+                    }
+                    @case ('badge') {
+                      <app-ui-badge
+                        [value]="row[header.key].label"
+                        [color]="row[header.key].color"
+                      />
+                    }
+                    @default {
+                      <span class="text-foreground">{{ row[header.key] }}</span>
+                    }
                   }
-                  @case ('badge') {
-                    <app-ui-badge
-                      [value]="row[header.key].label"
-                      [color]="row[header.key].color"
-                    />
-                  }
-                  @default {
-                    <span class="text-foreground">{{ row[header.key] }}</span>
-                  }
-                }
-              </td>
-            }
-          </tr>
-        }
-      </tbody>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      } @else {
+        <tbody class="divide-y divide-border bg-surface">
+          @for ( num of [1,2,3,4,5,6,7,8,9,10]; track num) {
+            <tr
+              class="transition-colors hover:bg-surface-hover"
+            >
+              @for (header of headers(); track header.key) {
+                <td class="px-4 py-3 first:pl-5 last:pr-5">
+                  <div class="h-2.5 bg-surface-subtle rounded-full w-32"></div>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      }
     </table>
   </div>
 </div>
