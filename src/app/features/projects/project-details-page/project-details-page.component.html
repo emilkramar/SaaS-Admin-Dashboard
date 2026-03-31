@@ -1,0 +1,91 @@
+<div class="mx-auto space-y-6 px-4 py-6 sm:px-5 lg:px-6">
+  <a
+    routerLink="/projects"
+    class="inline-flex text-sm font-medium text-primary underline-offset-4 hover:underline"
+  >
+    ← Back to projects
+  </a>
+
+  @if (loading()) {
+    <div class="animate-pulse space-y-4 rounded-xl border border-border bg-surface p-6">
+      <div class="h-8 w-2/3 max-w-md rounded bg-surface-subtle"></div>
+      <div class="h-4 w-40 rounded bg-surface-subtle"></div>
+      <div class="space-y-2 pt-4">
+        <div class="h-3 w-full rounded bg-surface-subtle"></div>
+        <div class="h-3 w-full rounded bg-surface-subtle"></div>
+        <div class="h-3 w-4/5 rounded bg-surface-subtle"></div>
+      </div>
+    </div>
+  } @else if (!project()) {
+    <div
+      class="rounded-xl border border-border bg-surface px-6 py-12 text-center shadow-sm"
+      role="status"
+    >
+      <p class="text-sm font-medium text-foreground">Project not found</p>
+      <p class="mt-1 text-xs text-muted-foreground">
+        This ID does not match any project. Return to the list and try again.
+      </p>
+    </div>
+  } @else {
+    @let p = project()!;
+    <article class="space-y-6 rounded-xl border border-border bg-surface p-6 shadow-sm">
+      <header class="flex flex-col gap-3 border-b border-border pb-6 sm:flex-row sm:items-start sm:justify-between">
+        <div class="min-w-0 space-y-1">
+          <h1 class="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+            {{ p.name }}
+          </h1>
+          <p class="text-sm text-muted-foreground">
+            Created
+            <time [attr.datetime]="p.created_at">{{ p.created_at | date: 'mediumDate' }}</time>
+          </p>
+        </div>
+        @if (labelBadge(); as lb) {
+          <app-ui-badge [value]="lb.label" [color]="lb.color" />
+        }
+      </header>
+
+      <section aria-labelledby="project-desc-heading">
+        <h2 id="project-desc-heading" class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Description
+        </h2>
+        <p class="mt-2 text-sm leading-relaxed text-foreground">
+          {{ p.description || 'No description for this project.' }}
+        </p>
+      </section>
+
+      <section aria-labelledby="project-participants-heading">
+        <h2 id="project-participants-heading" class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Participants
+        </h2>
+        @if (p.participants?.length) {
+          <div class="mt-3 overflow-hidden rounded-lg border border-border">
+            <table class="w-full border-collapse text-left text-sm">
+              <thead>
+                <tr class="border-b border-border bg-surface-subtle">
+                  <th class="px-4 py-3 font-medium text-muted-foreground">Name</th>
+                  <th class="px-4 py-3 font-medium text-muted-foreground">Role</th>
+                  <th class="px-4 py-3 font-medium text-muted-foreground">Email</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border bg-surface">
+                @for (person of p.participants; track person.id) {
+                  <tr class="hover:bg-surface-hover">
+                    <td class="px-4 py-3 text-foreground">{{ person.name }}</td>
+                    <td class="px-4 py-3 text-muted-foreground">{{ person.role }}</td>
+                    <td class="px-4 py-3">
+                      <a class="text-primary hover:underline" [href]="'mailto:' + person.email">{{
+                        person.email
+                      }}</a>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p class="mt-2 text-sm text-muted-foreground">No participants listed.</p>
+        }
+      </section>
+    </article>
+  }
+</div>

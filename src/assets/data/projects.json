@@ -1,0 +1,78 @@
+[
+  {
+    "id": 1,
+    "name": "Billing API v2",
+    "created_at": "2026-01-12T09:30:00.000Z",
+    "label": "FINISHED",
+    "description": "Version 2 of the billing REST API with idempotent webhooks, usage-based pricing tiers, and Stripe-compatible event shapes for easier audits.",
+    "participants": [
+      { "id": 101, "name": "Jordan Lee", "role": "Tech lead", "email": "jordan@company.com" },
+      { "id": 102, "name": "Sam Rivera", "role": "Backend engineer", "email": "sam@company.com" },
+      { "id": 103, "name": "Priya Nair", "role": "Product", "email": "priya@company.com" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Customer onboarding redesign",
+    "created_at": "2026-02-28T14:00:00.000Z",
+    "label": "INPROGRESS",
+    "description": "Guided flows, progress checklist, and in-app tips to reduce time-to-value for new teams joining the workspace.",
+    "participants": [
+      { "id": 201, "name": "Alex Morgan", "role": "Design", "email": "alex@company.com" },
+      { "id": 202, "name": "Chris Park", "role": "Frontend", "email": "chris@company.com" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Mobile push notifications",
+    "created_at": "2026-03-20T11:15:00.000Z",
+    "label": "NEW",
+    "description": "FCM-based push for mentions, billing alerts, and digest summaries with per-channel opt-in.",
+    "participants": [
+      { "id": 301, "name": "Taylor Kim", "role": "Mobile", "email": "taylor@company.com" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Analytics export (CSV)",
+    "created_at": "2025-11-03T08:45:00.000Z",
+    "label": "FINISHED",
+    "description": "Export funnels and retention views to CSV with scheduled reports.",
+    "participants": [
+      { "id": 401, "name": "Morgan Ellis", "role": "Data", "email": "morgan@company.com" },
+      { "id": 402, "name": "Riley Chen", "role": "Engineering", "email": "riley@company.com" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "SSO / SAML integration",
+    "created_at": "2026-03-01T16:20:00.000Z",
+    "label": "INPROGRESS",
+    "description": "Enterprise SSO via SAML 2.0, JIT provisioning, and domain verification.",
+    "participants": [
+      { "id": 501, "name": "Jamie Fox", "role": "Security", "email": "jamie@company.com" },
+      { "id": 502, "name": "Dana Scott", "role": "Backend", "email": "dana@company.com" }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Dark mode rollout",
+    "created_at": "2026-03-25T10:00:00.000Z",
+    "label": "NEW",
+    "description": "Theme tokens, contrast QA, and persisted user preference across admin surfaces.",
+    "participants": [
+      { "id": 601, "name": "Alex Morgan", "role": "Design", "email": "alex@company.com" },
+      { "id": 602, "name": "Casey Wu", "role": "Frontend", "email": "casey@company.com" }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Audit log retention",
+    "created_at": "2025-09-10T13:00:00.000Z",
+    "label": "FINISHED",
+    "description": "Configurable retention policies, cold storage archive path, and compliance-friendly exports.",
+    "participants": [
+      { "id": 701, "name": "Pat Quinn", "role": "Platform", "email": "pat@company.com" }
+    ]
+  }
+]

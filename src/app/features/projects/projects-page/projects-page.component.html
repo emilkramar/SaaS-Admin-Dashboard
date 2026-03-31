@@ -1,0 +1,19 @@
+<app-ui-table
+  [headers]="headers"
+  [rows]="projects()"
+  [loading]="loading()"
+  [actions]="rowActions"
+  [rowClickEnabled]="true"
+  (rowClick)="goToProjectDetails($event)"
+  (action)="onTableAction($event)"
+>
+  <div tableToolbar class="flex w-full flex-wrap justify-end gap-2 sm:w-auto">
+    <app-ui-button
+      label="New project"
+      variant="primary"
+      [class.opacity-50]="loading()"
+      [class.pointer-events-none]="loading()"
+      (clicked)="goToNewProject()"
+    />
+  </div>
+</app-ui-table>

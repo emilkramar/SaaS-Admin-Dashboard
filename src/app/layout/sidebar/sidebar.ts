@@ -28,7 +28,8 @@ export class Sidebar {
   constructor() {
     this.navItems.set([
       { order: 1, id: 'dashboard', label: 'Dashboard', path: '/' },
-      { order: 2, id: 'users', label: 'Users', path: '/users' }
+      { order: 2, id: 'users', label: 'Users', path: '/users' },
+      { order: 3, id: 'projects', label: 'Projects', path: '/projects' },
     ]);
   }
 }

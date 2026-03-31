@@ -1,0 +1,157 @@
+<div class="mx-auto space-y-6 px-4 py-6 sm:px-5 lg:px-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">New project</h1>
+    <a
+      routerLink="/projects"
+      class="text-sm font-medium text-primary underline-offset-4 hover:underline"
+    >
+      Back to projects
+    </a>
+  </div>
+
+  <form class="space-y-8" [formGroup]="form" (ngSubmit)="submit()">
+    <section class="rounded-xl border border-border bg-surface p-6 shadow-sm">
+      <h2 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Details</h2>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <div class="sm:col-span-2">
+          <label class="mb-1.5 block text-sm font-medium text-foreground" for="pf-name">Name</label>
+          <input
+            id="pf-name"
+            type="text"
+            [class]="fieldClass"
+            formControlName="name"
+            autocomplete="off"
+            placeholder="Project name"
+          />
+          @if (form.controls.name.touched && form.controls.name.hasError('required')) {
+            <p class="mt-1 text-xs text-error">Name is required.</p>
+          }
+        </div>
+
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-foreground" for="pf-label">Label</label>
+          <select id="pf-label" [class]="fieldClass" formControlName="label">
+            @for (opt of labelOptions; track opt.value) {
+              <option [ngValue]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-foreground" for="pf-start"
+            >Time start</label
+          >
+          <input id="pf-start" type="datetime-local" [class]="fieldClass" formControlName="timeStart" />
+          @if (form.controls.timeStart.touched && form.controls.timeStart.hasError('required')) {
+            <p class="mt-1 text-xs text-error">Start time is required.</p>
+          }
+        </div>
+        <div>
+          <label class="mb-1.5 block text-sm font-medium text-foreground" for="pf-end">Time end</label>
+          <input id="pf-end" type="datetime-local" [class]="fieldClass" formControlName="timeEnd" />
+          @if (form.controls.timeEnd.touched && form.controls.timeEnd.hasError('required')) {
+            <p class="mt-1 text-xs text-error">End time is required.</p>
+          }
+        </div>
+      </div>
+      @if (form.touched && form.hasError('endBeforeStart')) {
+        <p class="mt-2 text-xs text-error">End time must be on or after start time.</p>
+      }
+    </section>
+
+    <section class="rounded-xl border border-border bg-surface p-6 shadow-sm">
+      <h2 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Participants</h2>
+      <p class="mt-1 text-xs text-muted-foreground">
+        Add people from the same directory as the Users page (<code class="text-foreground">assets/data/users.json</code>).
+      </p>
+
+      <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div class="min-w-0 flex-1">
+          <label class="mb-1.5 block text-sm font-medium text-foreground" for="pf-user-catalog"
+            >User directory</label
+          >
+          <select
+            id="pf-user-catalog"
+            [class]="fieldClass"
+            [disabled]="usersLoading()"
+            [value]="catalogSelection()"
+            (change)="onCatalogSelect($event)"
+          >
+            <option value="">{{ usersLoading() ? 'Loading users...' : 'Choose a user...' }}</option>
+            @for (u of catalogUsers(); track u.id) {
+              <option [value]="u.id" [disabled]="isUserAlreadyAdded(u.id)">
+                {{ u.name }} - {{ u.role }} ({{ u.email }})
+              </option>
+            }
+          </select>
+        </div>
+        <app-ui-button
+          label="Add to project"
+          variant="secondary"
+          [class.pointer-events-none]="usersLoading() || !catalogSelection()"
+          [class.opacity-50]="usersLoading() || !catalogSelection()"
+          (clicked)="addParticipantFromCatalog()"
+        />
+      </div>
+
+      @if (participants.length === 0) {
+        <p class="mt-4 text-sm text-muted-foreground">
+          No participants yet. Pick a user from the directory and click "Add to project".
+        </p>
+      } @else {
+        <div formArrayName="participants" class="mt-4 flex flex-col gap-3" role="list">
+          @for (p of participants.controls; track $index; let i = $index) {
+            <div
+              class="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-border bg-surface-subtle/50 p-4"
+              [formGroupName]="i"
+            >
+              <div class="grid min-w-0 flex-1 gap-2 text-sm sm:grid-cols-3">
+                <div>
+                  <span class="text-xs text-muted-foreground">Name</span>
+                  <p class="font-medium text-foreground">{{ p.get('name')?.value }}</p>
+                  <input type="hidden" formControlName="name" />
+                </div>
+                <div>
+                  <span class="text-xs text-muted-foreground">Role</span>
+                  <p class="text-foreground">{{ p.get('role')?.value }}</p>
+                  <input type="hidden" formControlName="role" />
+                </div>
+                <div>
+                  <span class="text-xs text-muted-foreground">Email</span>
+                  <p class="truncate text-foreground">{{ p.get('email')?.value }}</p>
+                  <input type="hidden" formControlName="email" />
+                </div>
+              </div>
+              <input type="hidden" formControlName="userId" />
+              <button
+                type="button"
+                class="shrink-0 text-xs font-medium text-error hover:underline"
+                (click)="removeParticipant(i)"
+              >
+                Remove
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <button
+        type="submit"
+        class="inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] transition-colors hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+        style="background-color: var(--color-primary)"
+      >
+        Create project
+      </button>
+      <a
+        routerLink="/projects"
+        class="inline-flex items-center justify-center rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface-hover"
+      >
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>

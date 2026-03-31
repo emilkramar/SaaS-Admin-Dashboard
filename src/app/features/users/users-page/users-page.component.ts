@@ -6,7 +6,6 @@ import { UiButtonComponent } from '../../../shared/components/ui-button/ui-butto
 import { TableHeader, UiTableComponent } from '../../../shared/components/ui-table/ui-table.component';
 import { buildCsv, downloadCsv } from '../../../shared/utils/csv-export';
 
-/** Redak koji tablica prikazuje (status je badge objekt, ne string s API-ja). */
 export interface UsersTableRow {
   id: number;
   name: string;

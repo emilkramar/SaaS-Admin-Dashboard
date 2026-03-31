@@ -82,4 +82,17 @@ describe('UiTableComponent', () => {
   it('getExportRows returns the same rows as displayRows (full filtered/sorted set)', () => {
     expect(component.getExportRows()).toEqual(component.displayRows());
   });
+
+  it('adds empty actions th and kebab column when actions input is non-empty', () => {
+    expect(fixture.debugElement.queryAll(By.css('thead th')).length).toBe(2);
+
+    fixture.componentRef.setInput('actions', [{ param: 'view', label: 'View', permission: true }]);
+    fixture.detectChanges();
+    expect(fixture.debugElement.queryAll(By.css('thead th')).length).toBe(3);
+
+    fixture.componentRef.setInput('actions', [{ param: 'x', label: 'X', permission: false }]);
+    fixture.detectChanges();
+    expect(component.visibleActions().length).toBe(0);
+    expect(fixture.debugElement.queryAll(By.css('thead th')).length).toBe(3);
+  });
 });

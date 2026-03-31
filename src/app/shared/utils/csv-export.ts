@@ -17,7 +17,6 @@ export function buildCsv(
   return lines.map((line) => line.join(',')).join('\r\n');
 }
 
-/** UTF-8 BOM helps Excel on Windows recognize encoding. */
 export function downloadCsv(filename: string, csvBody: string): void {
   const blob = new Blob(['\uFEFF' + csvBody], {
     type: 'text/csv;charset=utf-8;',

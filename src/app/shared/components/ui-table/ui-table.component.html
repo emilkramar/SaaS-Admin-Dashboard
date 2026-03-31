@@ -62,13 +62,22 @@
               }
             </th>
           }
+          @if (actions() && actions().length) {
+            <th
+              class="w-12 px-5 py-3.5 align-middle first:pl-6 last:pr-6"
+              scope="col"
+              aria-hidden="true"
+            ></th>
+          }
         </tr>
       </thead>
       @if (!loading() && filteredRows().length === 0) {
         <tbody class="bg-surface">
           <tr>
             <td
-              [attr.colspan]="headers().length || 1"
+              [attr.colspan]="
+                (headers().length + (actions() && actions().length ? 1 : 0)) || 1
+              "
               class="px-6 py-16 text-center align-middle"
             >
               <div class="mx-auto flex max-w-sm flex-col items-center gap-2">
@@ -92,13 +101,22 @@
         </tbody>
       } @else if (!loading()) {
         <tbody class="divide-y divide-border bg-surface">
-          @for (row of paginatedRows(); track $index) {
-            <tr class="transition-colors hover:bg-surface-hover">
+          @for (row of paginatedRows(); track rowTrackId($index, row)) {
+            <tr
+              class="transition-colors hover:bg-surface-hover"
+              [class.cursor-pointer]="rowClickEnabled()"
+              (click)="onDataRowClick(row, $event)"
+            >
               @for (header of headers(); track header.key) {
                 <td class="px-5 py-3.5 align-middle first:pl-6 last:pr-6">
                   @switch (header.type) {
                     @case ('text') {
                       <span class="text-foreground">{{ row[header.key] }}</span>
+                    }
+                    @case ('date') {
+                      <span class="text-foreground tabular-nums">{{
+                        row[header.key] | date: 'mediumDate'
+                      }}</span>
                     }
                     @case ('badge') {
                       <app-ui-badge
@@ -112,6 +130,52 @@
                   }
                 </td>
               }
+              @if (actions() && actions().length) {
+                <td class="px-5 py-3.5 align-middle first:pl-6 last:pr-6">
+                  <div
+                    class="relative flex justify-end"
+                    data-row-action-anchor
+                    (click)="$event.stopPropagation()"
+                  >
+                    <button
+                      type="button"
+                      class="inline-flex rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-surface-subtle hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+                      [attr.aria-expanded]="rowMenuOpenId() === row.id"
+                      [attr.aria-haspopup]="true"
+                      [attr.aria-label]="
+                        row.name != null && row.name !== ''
+                          ? 'Row actions for ' + row.name
+                          : 'Row actions'
+                      "
+                      (click)="toggleRowMenu(row.id, $event)"
+                    >
+                      <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M12 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm0 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"
+                        />
+                      </svg>
+                    </button>
+                    @if (rowMenuOpenId() === row.id) {
+                      <div
+                        class="absolute right-0 top-full z-30 mt-1 min-w-[10rem] rounded-lg border border-border bg-surface py-1 shadow-lg ring-1 ring-border/50"
+                        role="menu"
+                        data-row-action-anchor
+                      >
+                        @for (opt of visibleActions(); track opt.param) {
+                          <button
+                            type="button"
+                            role="menuitem"
+                            class="flex w-full px-3 py-2 text-left text-sm text-foreground hover:bg-surface-hover"
+                            (click)="onRowMenuPick(opt.param, row, $event)"
+                          >
+                            {{ opt.label }}
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                </td>
+              }
             </tr>
           }
         </tbody>
@@ -122,6 +186,11 @@
               @for (header of headers(); track header.key) {
                 <td class="px-5 py-3.5 align-middle first:pl-6 last:pr-6">
                   <div class="h-3 w-full max-w-[8rem] rounded-full bg-surface-subtle"></div>
+                </td>
+              }
+              @if (actions() && actions().length) {
+                <td class="px-5 py-3.5 align-middle first:pl-6 last:pr-6">
+                  <div class="mx-auto h-3 w-8 rounded-full bg-surface-subtle"></div>
                 </td>
               }
             </tr>

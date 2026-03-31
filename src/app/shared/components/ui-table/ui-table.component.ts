@@ -1,6 +1,18 @@
-import { Component, computed, effect, input, signal } from '@angular/core';
+import { DatePipe, DOCUMENT } from '@angular/common';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, fromEvent, Subject } from 'rxjs';
 import { UiBadgeComponent } from '../ui-badge/ui-badge.component';
 
 export type PageSizeOption = 10 | 20 | 50;
@@ -12,9 +24,15 @@ export interface TableHeader {
   sort?: boolean;
 }
 
+export interface TableAction {
+  param: string;
+  label: string;
+  permission?: boolean;
+}
+
 @Component({
   selector: 'app-ui-table',
-  imports: [UiBadgeComponent, FormsModule],
+  imports: [UiBadgeComponent, FormsModule, DatePipe],
   templateUrl: './ui-table.component.html',
   styleUrl: './ui-table.component.css',
   standalone: true,
@@ -22,9 +40,24 @@ export interface TableHeader {
 export class UiTableComponent {
   readonly pageSizeOptions: PageSizeOption[] = [10, 20, 50];
 
+  private doc = inject(DOCUMENT);
+  private host = inject(ElementRef<HTMLElement>);
+  private destroyRef = inject(DestroyRef);
+
   headers = input<TableHeader[]>([]);
   rows = input<any[]>([]);
   loading = input<boolean>(true);
+  actions = input<TableAction[]>([]);
+  rowClickEnabled = input(false);
+
+  action = output<{ param: string; row: unknown }>();
+  rowClick = output<unknown>();
+
+  rowMenuOpenId = signal<number | string | null>(null);
+
+  readonly visibleActions = computed(() =>
+    this.actions().filter((a) => a.permission !== false),
+  );
 
   searchValue = signal<string>('');
   filteredRows = signal<any[]>([]);
@@ -114,10 +147,8 @@ export class UiTableComponent {
         } else {
           this.filteredRows.set(
             this.rows().filter((item) =>
-              Object.values(item).some((val) =>
-                String(val).toLowerCase().includes(term)
-              )
-            )
+              Object.values(item).some((val) => cellMatchesSearch(val, term)),
+            ),
           );
         }
         this.currentPage.set(1);
@@ -134,6 +165,38 @@ export class UiTableComponent {
       if (p > total) this.currentPage.set(total);
       if (p < 1) this.currentPage.set(1);
     });
+
+    fromEvent(this.doc, 'click')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((ev) => {
+        if (!this.host.nativeElement.contains(ev.target as Node)) {
+          this.rowMenuOpenId.set(null);
+        }
+      });
+  }
+
+  toggleRowMenu(id: number | string, ev: Event): void {
+    ev.stopPropagation();
+    this.rowMenuOpenId.update((cur) => (cur === id ? null : id));
+  }
+
+  onRowMenuPick(param: string, row: unknown, ev: Event): void {
+    ev.stopPropagation();
+    this.rowMenuOpenId.set(null);
+    this.action.emit({ param, row });
+  }
+
+  onDataRowClick(row: unknown, ev: MouseEvent): void {
+    const t = ev.target as HTMLElement | null;
+    if (t?.closest('[data-row-action-anchor]')) return;
+    this.rowMenuOpenId.set(null);
+    if (!this.rowClickEnabled()) return;
+    this.rowClick.emit(row);
+  }
+
+  rowTrackId(index: number, row: unknown): number | string {
+    const r = row as { id?: number | string };
+    return r.id ?? index;
   }
 
   setPageSize(size: PageSizeOption): void {
@@ -174,6 +237,10 @@ export class UiTableComponent {
       const label = (v as { label: unknown }).label;
       return label == null ? '' : String(label);
     }
+    if (header.type === 'date' && typeof v === 'string') {
+      const t = Date.parse(v);
+      return Number.isNaN(t) ? 0 : t;
+    }
     if (typeof v === 'number' && !Number.isNaN(v)) return v;
     if (v == null) return '';
     return String(v);
@@ -192,4 +259,15 @@ export class UiTableComponent {
   getExportRows(): unknown[] {
     return this.displayRows();
   }
+}
+
+function cellMatchesSearch(val: unknown, term: string): boolean {
+  if (val == null) return false;
+  if (typeof val === 'object' && val !== null && 'label' in val) {
+    const label = (val as { label: unknown }).label;
+    return String(label ?? '')
+      .toLowerCase()
+      .includes(term);
+  }
+  return String(val).toLowerCase().includes(term);
 }
