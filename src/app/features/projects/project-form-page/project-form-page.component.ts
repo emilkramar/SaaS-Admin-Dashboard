@@ -38,11 +38,9 @@ export class ProjectFormPageComponent {
     { value: 'FINISHED', label: 'Finished' },
   ];
 
-  /** Users from `assets/data/users.json` (same directory listing as Users page). */
   readonly catalogUsers = signal<IUser[]>([]);
   readonly usersLoading = signal(true);
 
-  /** Bound to the directory `<select>`; empty string means none chosen. */
   readonly catalogSelection = signal('');
 
   form = this.fb.group(
