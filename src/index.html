@@ -6,6 +6,18 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    (function () {
+      try {
+        var k = "saas-admin-theme";
+        var t = localStorage.getItem(k);
+        if (t === "dark") document.documentElement.classList.add("dark");
+        else if (t === "light") document.documentElement.classList.remove("dark");
+        else if (window.matchMedia("(prefers-color-scheme: dark)").matches)
+          document.documentElement.classList.add("dark");
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
   <app-root></app-root>

@@ -2,10 +2,10 @@
   class="overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow duration-200 hover:shadow-md"
 >
   <div
-    class="table-actions flex w-full flex-row items-center justify-end gap-3 border-b border-border px-5 py-3.5"
+    class="table-actions flex w-full flex-col gap-3 border-b border-border px-4 py-3.5 sm:flex-row sm:items-center sm:justify-end sm:px-5"
   >
     <input
-      class="search w-full max-w-xs rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+      class="search w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:max-w-xs"
       type="text"
       placeholder="Search..."
       [ngModel]="searchValue()"
@@ -13,8 +13,8 @@
     />
   </div>
 
-  <div class="overflow-x-auto">
-    <table class="w-full min-w-full border-collapse text-left text-sm">
+  <div class="-mx-px overflow-x-auto overscroll-x-contain sm:mx-0">
+    <table class="min-w-[640px] w-full border-collapse text-left text-sm sm:min-w-full">
       <thead>
         <tr class="border-b border-border bg-surface-subtle">
           @for (header of headers(); track header.key) {
@@ -114,11 +114,11 @@
         </tbody>
       } @else {
         <tbody class="divide-y divide-border bg-surface">
-          @for (num of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track num) {
-            <tr class="transition-colors hover:bg-surface-hover">
+          @for (num of [1, 2, 3, 4, 5, 6, 7, 8]; track num) {
+            <tr class="animate-pulse">
               @for (header of headers(); track header.key) {
                 <td class="px-5 py-3.5 align-middle first:pl-6 last:pr-6">
-                  <div class="h-2.5 bg-surface-subtle rounded-full w-32"></div>
+                  <div class="h-3 w-full max-w-[8rem] rounded-full bg-surface-subtle"></div>
                 </td>
               }
             </tr>

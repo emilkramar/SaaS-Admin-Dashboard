@@ -1,15 +1,29 @@
-<div class="flex h-screen">
+<div class="flex h-screen overflow-hidden bg-background">
+  @if (shell.sidebarOpen()) {
+    <button
+      type="button"
+      class="fixed inset-0 z-40 bg-black/50 backdrop-blur-[1px] transition-opacity lg:hidden"
+      (click)="shell.closeSidebar()"
+      aria-label="Close navigation menu"
+    ></button>
+  }
 
-  <app-sidebar class="w-64"></app-sidebar>
-
-  <div class="flex flex-col flex-1">
-
-    <app-header></app-header>
-
-    <main class="flex-1 overflow-auto px-5 py-6 sm:px-6 sm:py-8 lg:px-8">
-      <router-outlet></router-outlet>
-    </main>
-
+  <div
+    class="fixed inset-y-0 left-0 z-50 flex w-[min(100vw-3rem,16rem)] shrink-0 flex-col border-r border-border bg-sidebar shadow-xl transition-transform duration-300 ease-out max-lg:duration-300 lg:static lg:z-0 lg:h-full lg:w-64 lg:translate-x-0 lg:shadow-none"
+    [class.max-lg:-translate-x-full]="!shell.sidebarOpen()"
+    [class.max-lg:translate-x-0]="shell.sidebarOpen()"
+    id="app-sidebar-nav"
+  >
+    <app-sidebar class="flex h-full min-h-0 flex-1 flex-col"></app-sidebar>
   </div>
 
+  <div class="flex min-w-0 flex-1 flex-col lg:pl-0">
+    <app-header></app-header>
+
+    <main
+      class="flex-1 overflow-x-hidden overflow-y-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8"
+    >
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>

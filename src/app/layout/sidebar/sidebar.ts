@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ShellLayoutService } from '../shell-layout.service';
 
 export interface NavItem {
   order: number;
@@ -13,11 +14,16 @@ export interface NavItem {
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
-  standalone: true
+  standalone: true,
 })
 export class Sidebar {
+  private shell = inject(ShellLayoutService);
 
   navItems = signal<NavItem[]>([]);
+
+  onNavClick(): void {
+    this.shell.closeSidebar();
+  }
 
   constructor() {
     this.navItems.set([
