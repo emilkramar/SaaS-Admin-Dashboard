@@ -9,6 +9,7 @@ export interface TableHeader {
   key: string;
   label: string;
   type: string;
+  sort?: boolean;
 }
 
 @Component({
@@ -31,9 +32,33 @@ export class UiTableComponent {
   pageSize = signal<PageSizeOption>(10);
   currentPage = signal(1);
 
+  sortKey = signal<string | null>(null);
+  sortDir = signal<'asc' | 'desc'>('asc');
+
   private searchSubject = new Subject<string>();
 
-  totalItems = computed(() => this.filteredRows().length);
+  displayRows = computed(() => {
+    const rows = [...this.filteredRows()];
+    const key = this.sortKey();
+    const dir = this.sortDir();
+    const header = this.headers().find((h) => h.key === key);
+    if (!key || !header?.sort) {
+      return rows;
+    }
+
+    const mul = dir === 'asc' ? 1 : -1;
+    rows.sort(
+      (a, b) =>
+        mul *
+        this.compareSortValues(
+          this.getSortValue(a, key, header),
+          this.getSortValue(b, key, header),
+        ),
+    );
+    return rows;
+  });
+
+  totalItems = computed(() => this.displayRows().length);
 
   totalPages = computed(() => {
     const n = this.totalItems();
@@ -42,7 +67,7 @@ export class UiTableComponent {
   });
 
   paginatedRows = computed(() => {
-    const rows = this.filteredRows();
+    const rows = this.displayRows();
     const size = this.pageSize();
     const page = this.currentPage();
     const start = (page - 1) * size;
@@ -129,5 +154,38 @@ export class UiTableComponent {
 
   nextPage(): void {
     this.goToPage(this.currentPage() + 1);
+  }
+
+  toggleSort(header: TableHeader): void {
+    if (!header.sort) return;
+    if (this.sortKey() === header.key) {
+      this.sortDir.update((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      this.sortKey.set(header.key);
+      this.sortDir.set('asc');
+    }
+    this.currentPage.set(1);
+  }
+
+  private getSortValue(row: unknown, key: string, header: TableHeader): string | number {
+    const r = row as Record<string, unknown>;
+    const v = r[key];
+    if (header.type === 'badge' && v && typeof v === 'object' && v !== null && 'label' in v) {
+      const label = (v as { label: unknown }).label;
+      return label == null ? '' : String(label);
+    }
+    if (typeof v === 'number' && !Number.isNaN(v)) return v;
+    if (v == null) return '';
+    return String(v);
+  }
+
+  private compareSortValues(a: string | number, b: string | number): number {
+    if (typeof a === 'number' && typeof b === 'number') {
+      return a === b ? 0 : a < b ? -1 : 1;
+    }
+    return String(a).localeCompare(String(b), undefined, {
+      numeric: true,
+      sensitivity: 'base',
+    });
   }
 }

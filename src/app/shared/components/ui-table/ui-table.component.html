@@ -16,8 +16,43 @@
           @for (header of headers(); track header.key) {
             <th
               class="px-4 py-3 font-medium text-muted-foreground first:pl-5 last:pr-5"
+              [attr.aria-sort]="
+                header.sort && sortKey() === header.key
+                  ? sortDir() === 'asc'
+                    ? 'ascending'
+                    : 'descending'
+                  : null
+              "
             >
-              {{ header.label }}
+              @if (header.sort) {
+                <button
+                  type="button"
+                  class="inline-flex w-max items-center gap-1 text-left text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 rounded"
+                  (click)="toggleSort(header)"
+                >
+                  <span>{{ header.label }}</span>
+                  <span
+                    class="inline-flex shrink-0 flex-col items-center gap-0 text-[0.55rem] leading-[0.65] text-muted-foreground transition-opacity"
+                    [class.opacity-50]="sortKey() !== header.key"
+                    aria-hidden="true"
+                  >
+                    <span
+                      class="leading-none transition-colors"
+                      [class.text-primary]="sortKey() === header.key && sortDir() === 'asc'"
+                    >
+                      ▲
+                    </span>
+                    <span
+                      class="-mt-px leading-none transition-colors"
+                      [class.text-primary]="sortKey() === header.key && sortDir() === 'desc'"
+                    >
+                      ▼
+                    </span>
+                  </span>
+                </button>
+              } @else {
+                {{ header.label }}
+              }
             </th>
           }
         </tr>

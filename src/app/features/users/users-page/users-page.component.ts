@@ -18,10 +18,10 @@ export class UsersPageComponent {
   private _users = inject(User);
 
   public headers: TableHeader[] = [
-    { key: 'name', label: 'Name', type: 'text' },
-    { key: 'email', label: 'Email', type: 'text' },
-    { key: 'role', label: 'Role', type: 'text' },
-    { key: 'status', label: 'Status', type: 'badge' }
+    { key: 'name', label: 'Name', type: 'text', sort: true },
+    { key: 'email', label: 'Email', type: 'text', sort: true },
+    { key: 'role', label: 'Role', type: 'text', sort: true },
+    { key: 'status', label: 'Status', type: 'badge', sort: true }
   ]
 
   users = signal<IUser[]>([])
