@@ -23,19 +23,65 @@
     <p class="truncate text-sm font-semibold text-foreground lg:text-base">SaaS Admin</p>
   </div>
 
-  <button
-    type="button"
-    class="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-hover"
-    (click)="theme.toggle()"
-    [attr.aria-pressed]="theme.isDark()"
-    [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
-  >
-    @if (theme.isDark()) {
-      <span aria-hidden="true" class="text-base leading-none">☀️</span>
-      <span class="hidden sm:inline">Light</span>
-    } @else {
-      <span aria-hidden="true" class="text-base leading-none">🌙</span>
-      <span class="hidden sm:inline">Dark</span>
-    }
-  </button>
+  <div class="flex shrink-0 items-center gap-1.5 sm:gap-2">
+    <button
+      type="button"
+      class="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-surface-hover"
+      (click)="theme.toggle()"
+      [attr.aria-pressed]="theme.isDark()"
+      [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+    >
+      @if (theme.isDark()) {
+        <span aria-hidden="true" class="text-base leading-none">☀️</span>
+        <span class="hidden sm:inline">Light</span>
+      } @else {
+        <span aria-hidden="true" class="text-base leading-none">🌙</span>
+        <span class="hidden sm:inline">Dark</span>
+      }
+    </button>
+
+    <button
+      type="button"
+      class="relative inline-flex rounded-lg border border-border bg-surface p-2 text-foreground transition-colors hover:bg-surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+      (click)="onNotificationsClick()"
+      [attr.aria-label]="
+        notificationCount() > 0
+          ? 'Notifications, ' + notificationCount() + ' unread'
+          : 'Notifications, no unread messages'
+      "
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+        />
+      </svg>
+      @if (notificationCount() > 0) {
+        <span
+          class="absolute right-0.5 top-0.5 flex h-4 min-w-[1rem] justify-center rounded-full bg-error px-1 text-[10px] font-semibold leading-4 text-white ring-2 ring-surface"
+        >
+          {{ notificationCount() > 9 ? '9+' : notificationCount() }}
+        </span>
+      }
+    </button>
+
+    <div
+      class="ml-0.5 flex min-w-0 items-center gap-2 border-l border-border pl-2 sm:ml-1 sm:pl-3"
+      role="group"
+      [attr.aria-label]="'Signed in as ' + userName()"
+    >
+      <img
+        class="h-8 w-8 shrink-0 rounded-full object-cover ring-2 ring-border"
+        src="assets/images/avatar_placeholder.webp"
+        width="32"
+        height="32"
+        alt=""
+      />
+      <span class="hidden max-w-[9rem] truncate text-sm font-medium text-foreground sm:inline md:max-w-[12rem]">
+        {{ userName() }}
+      </span>
+    </div>
+  </div>
 </header>
