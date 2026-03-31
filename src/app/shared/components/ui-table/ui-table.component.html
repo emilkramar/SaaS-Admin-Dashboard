@@ -22,9 +22,35 @@
           }
         </tr>
       </thead>
-      @if (!loading()) {
+      @if (!loading() && filteredRows().length === 0) {
+        <tbody class="bg-surface">
+          <tr>
+            <td
+              [attr.colspan]="headers().length || 1"
+              class="px-5 py-16 text-center"
+            >
+              <div class="mx-auto flex max-w-sm flex-col items-center gap-2">
+                <p class="text-sm font-medium text-foreground">
+                  @if (searchValue().trim()) {
+                    No matching results
+                  } @else {
+                    No data to display
+                  }
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  @if (searchValue().trim()) {
+                    Try a different search term or clear the filter.
+                  } @else {
+                    When records are available, they will appear here.
+                  }
+                </p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      } @else if (!loading()) {
         <tbody class="divide-y divide-border bg-surface">
-          @for (row of filteredRows(); track $index) {
+          @for (row of paginatedRows(); track $index) {
             <tr
               class="transition-colors hover:bg-surface-hover"
             >
@@ -66,4 +92,67 @@
       }
     </table>
   </div>
+
+  @if (!loading() && totalItems() > 0) {
+    <div
+      class="flex flex-col gap-3 border-t border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div class="flex items-center gap-2 text-sm text-muted-foreground">
+        <label class="shrink-0" for="ui-table-page-size">Rows per page</label>
+        <select
+          id="ui-table-page-size"
+          class="rounded-lg border border-border bg-surface px-2 py-1.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          [ngModel]="pageSize()"
+          (ngModelChange)="setPageSize($event)"
+        >
+          @for (opt of pageSizeOptions; track opt) {
+            <option [ngValue]="opt">{{ opt }}</option>
+          }
+        </select>
+        <span class="hidden text-xs sm:inline">
+          {{ (currentPage() - 1) * pageSize() + 1 }}–{{ (currentPage() - 1) * pageSize() + paginatedRows().length }}
+          of {{ totalItems() }}
+        </span>
+      </div>
+
+      <nav class="flex flex-wrap items-center justify-center gap-1" aria-label="Table pagination">
+        <button
+          type="button"
+          class="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground transition-colors hover:bg-surface-hover disabled:pointer-events-none disabled:opacity-40"
+          [disabled]="currentPage() <= 1"
+          (click)="prevPage()"
+        >
+          Previous
+        </button>
+        @for (item of visiblePages(); track $index) {
+          @if (item === 'ellipsis') {
+            <span class="px-2 text-sm text-muted-foreground">&hellip;</span>
+          } @else {
+            <button
+              type="button"
+              class="min-w-9 rounded-lg border px-2 py-1.5 text-sm transition-colors"
+              [class.border-primary]="currentPage() === item"
+              [class.bg-primary-muted]="currentPage() === item"
+              [class.text-primary]="currentPage() === item"
+              [class.border-transparent]="currentPage() !== item"
+              [class.bg-transparent]="currentPage() !== item"
+              [class.text-foreground]="currentPage() !== item"
+              [class.hover:bg-surface-hover]="currentPage() !== item"
+              (click)="goToPage(item)"
+            >
+              {{ item }}
+            </button>
+          }
+        }
+        <button
+          type="button"
+          class="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-foreground transition-colors hover:bg-surface-hover disabled:pointer-events-none disabled:opacity-40"
+          [disabled]="currentPage() >= totalPages()"
+          (click)="nextPage()"
+        >
+          Next
+        </button>
+      </nav>
+    </div>
+  }
 </div>
