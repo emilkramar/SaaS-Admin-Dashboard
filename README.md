@@ -43,32 +43,6 @@ The **main layout** wraps all feature routes: header (menu + theme), collapsible
 
 ---
 
-## Screenshots (static preview)
-
-*(Illustrative mockups—replace with your own captures from `ng serve` if you want pixels that match your machine.)*
-
-### Dashboard
-
-<p align="center">
-  <img src="docs/screenshots/dashboard-overview.png" alt="Dashboard with KPI cards and charts" width="720" />
-</p>
-
-### Users table & export
-
-<p align="center">
-  <img src="docs/screenshots/users-table.png" alt="Users table with toolbar and export" width="720" />
-</p>
-
-### Dark mode
-
-<p align="center">
-  <img src="docs/screenshots/dashboard-dark.png" alt="Dashboard in dark theme" width="720" />
-</p>
-
-**Add your own screenshots:** save PNGs under [`docs/screenshots/`](docs/screenshots/) using the same filenames, or change the paths in this README.
-
----
-
 ## Getting started
 
 **Requirements:** Node.js **20+** and npm (see `packageManager` in `package.json`).
