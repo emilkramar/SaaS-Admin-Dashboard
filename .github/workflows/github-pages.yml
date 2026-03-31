@@ -1,6 +1,3 @@
-# Builds the app with a base href for project pages (/repo-name/) and deploys to GitHub Pages.
-# After the first successful run: Repo → Settings → Pages → Source = "GitHub Actions".
-
 name: GitHub Pages
 
 on:
