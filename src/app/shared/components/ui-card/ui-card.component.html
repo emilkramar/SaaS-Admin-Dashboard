@@ -1,3 +1,12 @@
-<div class="card p-4 rounded-xl shadow border-[">
-
+<div
+  class="group flex h-full flex-col rounded-xl border border-border bg-surface p-5 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md"
+>
+  <div class="card-header mb-4">
+    <h3 class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      {{ title() }}
+    </h3>
+  </div>
+  <div class="card-body flex-1">
+    <ng-content />
+  </div>
 </div>

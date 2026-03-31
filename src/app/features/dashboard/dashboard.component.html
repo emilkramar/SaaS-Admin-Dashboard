@@ -1,1 +1,145 @@
-<p>dashboard works!</p>
+<div class="space-y-8">
+  <div class="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3">
+    <app-ui-card title="Users">
+      @if (metricsLoading()) {
+        <div class="animate-pulse space-y-3" aria-busy="true">
+          <span class="sr-only">Loading users metric</span>
+          <div class="h-9 max-w-[6rem] rounded-md bg-surface-subtle"></div>
+          <div class="h-3 max-w-[11rem] rounded bg-surface-subtle/80"></div>
+        </div>
+      } @else if (metrics(); as m) {
+        <p class="text-3xl font-semibold tabular-nums tracking-tight text-foreground">
+          {{ m.totalUsers | number }}
+        </p>
+        <p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+          Total registered accounts
+        </p>
+      } @else {
+        <p class="text-sm text-muted-foreground">Could not load metrics.</p>
+      }
+    </app-ui-card>
+
+    <app-ui-card title="Revenue">
+      @if (metricsLoading()) {
+        <div class="animate-pulse space-y-3" aria-busy="true">
+          <span class="sr-only">Loading revenue metric</span>
+          <div class="h-9 max-w-[8rem] rounded-md bg-surface-subtle"></div>
+          <div class="h-3 max-w-[10rem] rounded bg-surface-subtle/80"></div>
+        </div>
+      } @else if (metrics(); as m) {
+        <p class="text-3xl font-semibold tabular-nums tracking-tight text-foreground">
+          {{ m.revenue | currency: 'USD' : 'symbol' : '1.0-0' }}
+        </p>
+        <p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+          Reported period total
+        </p>
+      } @else {
+        <p class="text-sm text-muted-foreground">Could not load metrics.</p>
+      }
+    </app-ui-card>
+
+    <app-ui-card title="Growth">
+      @if (metricsLoading()) {
+        <div class="animate-pulse space-y-3" aria-busy="true">
+          <span class="sr-only">Loading growth metric</span>
+          <div class="h-9 max-w-[5rem] rounded-md bg-surface-subtle"></div>
+          <div class="h-3 max-w-[8rem] rounded bg-surface-subtle/80"></div>
+        </div>
+      } @else if (metrics(); as m) {
+        <p class="text-3xl font-semibold tabular-nums tracking-tight text-foreground">
+          +{{ m.growth }}%
+        </p>
+        <p class="mt-2 text-xs leading-relaxed text-muted-foreground">Year over year</p>
+      } @else {
+        <p class="text-sm text-muted-foreground">Could not load metrics.</p>
+      }
+    </app-ui-card>
+  </div>
+
+  <div class="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:items-stretch lg:gap-6">
+    <div class="flex min-h-0 flex-col gap-5">
+      @if (metricsLoading()) {
+        <div
+          class="animate-pulse rounded-xl border border-border bg-surface p-5 shadow-sm"
+          aria-busy="true"
+        >
+          <span class="sr-only">Loading users chart</span>
+          <div class="mb-4 h-3 max-w-[8rem] rounded bg-surface-subtle"></div>
+          <div class="h-64 w-full rounded-lg bg-surface-subtle/70"></div>
+        </div>
+        <div
+          class="animate-pulse rounded-xl border border-border bg-surface p-5 shadow-sm"
+          aria-busy="true"
+        >
+          <span class="sr-only">Loading revenue chart</span>
+          <div class="mb-4 h-3 max-w-[9rem] rounded bg-surface-subtle"></div>
+          <div class="h-64 w-full rounded-lg bg-surface-subtle/70"></div>
+        </div>
+      } @else if (metrics(); as m) {
+        <app-ui-chart
+          chartTitle="Users over time"
+          chartKind="line"
+          [labels]="m.usersTrend.labels"
+          [values]="m.usersTrend.values"
+          datasetLabel="Users"
+        />
+        <app-ui-chart
+          chartTitle="Revenue over time"
+          chartKind="bar"
+          [labels]="m.revenueTrend.labels"
+          [values]="m.revenueTrend.values"
+          datasetLabel="Revenue (USD)"
+        />
+      } @else {
+        <p class="text-sm text-muted-foreground">Charts unavailable.</p>
+      }
+    </div>
+
+    <div class="min-h-0 lg:flex lg:flex-col">
+      <app-ui-card title="Recent activity">
+        @if (activitiesLoading()) {
+          <ul
+            class="flex flex-col gap-0"
+            aria-busy="true"
+            role="presentation"
+          >
+            <span class="sr-only">Loading recent activity</span>
+            @for (s of [1, 2, 3, 4, 5, 6]; track s) {
+              <li
+                class="flex animate-pulse gap-3 border-b border-border py-3 first:pt-0 last:border-0 last:pb-0"
+              >
+                <div class="mt-0.5 h-3 w-4 shrink-0 rounded bg-surface-subtle"></div>
+                <div class="min-w-0 flex-1 space-y-2">
+                  <div class="h-4 max-w-[14rem] rounded bg-surface-subtle"></div>
+                  <div class="h-3 max-w-[10rem] rounded bg-surface-subtle/80"></div>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else if (activities().length) {
+          <ul class="flex flex-col gap-0 text-sm leading-relaxed" role="list">
+            @for (item of activities(); track item.id) {
+              <li
+                class="flex gap-3 border-b border-border py-3 first:pt-0 last:border-0 last:pb-0"
+              >
+                <span
+                  class="w-4 shrink-0 pt-0.5 text-center text-muted-foreground"
+                  aria-hidden="true"
+                  >–</span
+                >
+                <div class="min-w-0 flex-1">
+                  <p class="font-medium text-foreground">{{ item.action }}</p>
+                  <p class="mt-0.5 text-xs text-muted-foreground">
+                    {{ item.user }} · {{ item.time }}
+                  </p>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="text-sm text-muted-foreground">No recent activity.</p>
+        }
+      </app-ui-card>
+    </div>
+  </div>
+</div>

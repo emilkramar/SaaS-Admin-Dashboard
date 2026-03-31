@@ -1,5 +1,9 @@
-<div class="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
-  <div class="table-actions w-full flex flex-row justify-end border-b border-border px-4 py-3">
+<div
+  class="overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow duration-200 hover:shadow-md"
+>
+  <div
+    class="table-actions flex w-full flex-row items-center justify-end gap-3 border-b border-border px-5 py-3.5"
+  >
     <input
       class="search w-full max-w-xs rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
       type="text"
@@ -15,7 +19,7 @@
         <tr class="border-b border-border bg-surface-subtle">
           @for (header of headers(); track header.key) {
             <th
-              class="px-4 py-3 font-medium text-muted-foreground first:pl-5 last:pr-5"
+              class="px-5 py-3.5 align-middle text-xs font-semibold uppercase tracking-wide text-muted-foreground first:pl-6 last:pr-6"
               [attr.aria-sort]="
                 header.sort && sortKey() === header.key
                   ? sortDir() === 'asc'
@@ -27,7 +31,7 @@
               @if (header.sort) {
                 <button
                   type="button"
-                  class="inline-flex w-max items-center gap-1 text-left text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 rounded"
+                  class="inline-flex w-max max-w-full items-center gap-1.5 rounded text-left text-muted-foreground transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
                   (click)="toggleSort(header)"
                 >
                   <span>{{ header.label }}</span>
@@ -62,7 +66,7 @@
           <tr>
             <td
               [attr.colspan]="headers().length || 1"
-              class="px-5 py-16 text-center"
+              class="px-6 py-16 text-center align-middle"
             >
               <div class="mx-auto flex max-w-sm flex-col items-center gap-2">
                 <p class="text-sm font-medium text-foreground">
@@ -86,11 +90,9 @@
       } @else if (!loading()) {
         <tbody class="divide-y divide-border bg-surface">
           @for (row of paginatedRows(); track $index) {
-            <tr
-              class="transition-colors hover:bg-surface-hover"
-            >
+            <tr class="transition-colors hover:bg-surface-hover">
               @for (header of headers(); track header.key) {
-                <td class="px-4 py-3 first:pl-5 last:pr-5">
+                <td class="px-5 py-3.5 align-middle first:pl-6 last:pr-6">
                   @switch (header.type) {
                     @case ('text') {
                       <span class="text-foreground">{{ row[header.key] }}</span>
@@ -112,12 +114,10 @@
         </tbody>
       } @else {
         <tbody class="divide-y divide-border bg-surface">
-          @for ( num of [1,2,3,4,5,6,7,8,9,10]; track num) {
-            <tr
-              class="transition-colors hover:bg-surface-hover"
-            >
+          @for (num of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track num) {
+            <tr class="transition-colors hover:bg-surface-hover">
               @for (header of headers(); track header.key) {
-                <td class="px-4 py-3 first:pl-5 last:pr-5">
+                <td class="px-5 py-3.5 align-middle first:pl-6 last:pr-6">
                   <div class="h-2.5 bg-surface-subtle rounded-full w-32"></div>
                 </td>
               }
@@ -130,7 +130,7 @@
 
   @if (!loading() && totalItems() > 0) {
     <div
-      class="flex flex-col gap-3 border-t border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+      class="flex flex-col gap-3 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
     >
       <div class="flex items-center gap-2 text-sm text-muted-foreground">
         <label class="shrink-0" for="ui-table-page-size">Rows per page</label>

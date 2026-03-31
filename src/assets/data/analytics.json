@@ -1,0 +1,13 @@
+{
+  "totalUsers": 100,
+  "revenue": 12400,
+  "growth": 12,
+  "usersTrend": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "values": [42, 52, 61, 68, 78, 92]
+  },
+  "revenueTrend": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "values": [8200, 9100, 9800, 10500, 11200, 12400]
+  }
+}
