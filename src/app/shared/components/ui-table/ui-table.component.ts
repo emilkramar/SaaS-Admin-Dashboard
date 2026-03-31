@@ -188,4 +188,8 @@ export class UiTableComponent {
       sensitivity: 'base',
     });
   }
+
+  getExportRows(): unknown[] {
+    return this.displayRows();
+  }
 }

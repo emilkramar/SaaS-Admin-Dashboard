@@ -2,15 +2,18 @@
   class="overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow duration-200 hover:shadow-md"
 >
   <div
-    class="table-actions flex w-full flex-col gap-3 border-b border-border px-4 py-3.5 sm:flex-row sm:items-center sm:justify-end sm:px-5"
+    class="table-actions flex w-full flex-col gap-3 border-b border-border px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:px-5"
   >
     <input
-      class="search w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:max-w-xs"
+      class="search w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 sm:max-w-xs sm:flex-1 sm:min-w-0"
       type="text"
       placeholder="Search..."
       [ngModel]="searchValue()"
       (ngModelChange)="searchValue.set($event)"
     />
+    <div class="flex shrink-0 flex-wrap items-center justify-stretch gap-2 sm:justify-end">
+      <ng-content select="[tableToolbar]" />
+    </div>
   </div>
 
   <div class="-mx-px overflow-x-auto overscroll-x-contain sm:mx-0">

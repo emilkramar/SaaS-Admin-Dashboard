@@ -71,6 +71,12 @@ describe('UsersPageComponent', () => {
     expect(bob!.status.color).toBe('warning');
   });
 
+  it('should show Export users → CSV in the table toolbar', () => {
+    const host = fixture.debugElement.query(By.css('app-ui-button'));
+    expect(host).toBeTruthy();
+    expect(host.nativeElement.textContent).toContain('Export users');
+  });
+
   describe('Users page → table integration', () => {
     it('should pass headers, rows, and loading into app-ui-table', () => {
       const tableDe = fixture.debugElement.query(By.directive(UiTableComponent));
@@ -93,6 +99,35 @@ describe('UsersPageComponent', () => {
       const domRows = fixture.debugElement.queryAll(By.css('tbody tr'));
       expect(domRows.length).toBe(1);
       expect(domRows[0].nativeElement.textContent).toContain('Bob');
+    });
+
+    it('exportUsersCsv should pass search-filtered rows into the CSV download blob', async () => {
+      const tableDe = fixture.debugElement.query(By.directive(UiTableComponent));
+      const table = tableDe.componentInstance as UiTableComponent;
+      table.searchValue.set('Bob');
+      await new Promise<void>((r) => setTimeout(r, 400));
+      fixture.detectChanges();
+
+      let blobFromExport: Blob | undefined;
+      const urlSpy = vi.spyOn(URL, 'createObjectURL').mockImplementation(
+        (obj: Blob | MediaSource) => {
+          blobFromExport = obj instanceof Blob ? obj : undefined;
+          return 'blob:unit-test';
+        },
+      );
+      const revokeSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
+
+      component.exportUsersCsv();
+
+      expect(blobFromExport).toBeDefined();
+      const text = await blobFromExport!.text();
+      const body = text.replace(/^\uFEFF/, '');
+      expect(body).toContain('ID,Name,Email,Role,Status');
+      expect(body).toContain('Bob Jones');
+      expect(body).not.toContain('Anna Smith');
+
+      urlSpy.mockRestore();
+      revokeSpy.mockRestore();
     });
   });
 });

@@ -3,5 +3,13 @@
   [rows]="users()"
   [loading]="loading()"
 >
-
+  <div tableToolbar class="w-full sm:w-auto">
+    <app-ui-button
+      label="Export users"
+      variant="secondary"
+      [class.opacity-50]="loading()"
+      [class.pointer-events-none]="loading()"
+      (clicked)="exportUsersCsv()"
+    />
+  </div>
 </app-ui-table>

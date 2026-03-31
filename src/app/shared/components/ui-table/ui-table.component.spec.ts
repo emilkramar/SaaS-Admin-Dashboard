@@ -78,4 +78,8 @@ describe('UiTableComponent', () => {
       expect(names).toEqual(['Anna', 'Mike', 'Zara']);
     });
   });
+
+  it('getExportRows returns the same rows as displayRows (full filtered/sorted set)', () => {
+    expect(component.getExportRows()).toEqual(component.displayRows());
+  });
 });
